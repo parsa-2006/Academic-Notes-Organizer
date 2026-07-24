@@ -1,0 +1,69 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}{% if form.instance.pk %}ویرایش یادداشت{% else %}یادداشت جدید{% endif %} - سیستم مدیریت جزوات{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'courses:course_detail' course.pk %}" style="color: #667eea; text-decoration: none; font-size: 14px;">
+            ← بازگشت به درس {{ course.title }}
+        </a>
+    </div>
+    
+    <h2 style="color: #2c3e50; margin-bottom: 10px; text-align: center;">
+        {% if form.instance.pk %}
+            ✏️ ویرایش یادداشت
+        {% else %}
+            + یادداشت جدید
+        {% endif %}
+    </h2>
+    
+    <p style="text-align: center; color: #7f8c8d; margin-bottom: 30px;">
+        📁 درس: <strong>{{ course.title }}</strong>
+    </p>
+    
+    <form method="post" style="background: #f8f9fa; padding: 30px; border-radius: 8px;">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="message error" style="margin-bottom: 20px;">
+                ❌ لطفاً خطاهای زیر را اصلاح کنید:
+                <ul style="margin-top: 10px; margin-right: 20px;">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="id_title">عنوان یادداشت:</label>
+            <input type="text" name="title" id="id_title" required
+                   value="{{ form.title.value|default:'' }}"
+                   placeholder="مثال: جلسه ۱ - مقدمه مشتق">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_content">متن یادداشت:</label>
+            <textarea name="content" id="id_content" rows="10" required
+                      placeholder="متن کامل یادداشت را اینجا بنویسید...">{{ form.content.value|default:'' }}</textarea>
+            <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                می‌توانید از خطوط جدید برای جدا کردن بخش‌ها استفاده کنید.
+            </small>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+                💾 ذخیره یادداشت
+            </button>
+            <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                ❌ انصراف
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

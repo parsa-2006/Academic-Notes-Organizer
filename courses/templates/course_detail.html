@@ -1,0 +1,81 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}{{ course.title }} - سیستم مدیریت جزوات{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom: 30px;">
+    <a href="{% url 'courses:course_list' %}" style="color: #667eea; text-decoration: none; font-size: 14px;">
+        ← بازگشت به لیست دروس
+    </a>
+</div>
+
+<div style="background: #f8f9fa; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h2 style="color: #2c3e50; margin-bottom: 10px;">📁 {{ course.title }}</h2>
+            <p style="color: #7f8c8d; line-height: 1.6;">
+                {{ course.description|default:"بدون توضیحات" }}
+            </p>
+            <small style="color: #95a5a6; display: block; margin-top: 10px;">
+                📅 ایجاد شده در: {{ course.created_at|date:"Y/m/d - H:i" }}
+            </small>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'courses:course_edit' course.pk %}" class="btn btn-secondary">
+                ✏️ ویرایش درس
+            </a>
+            <a href="{% url 'courses:course_delete' course.pk %}" class="btn btn-danger">
+                🗑️ حذف درس
+            </a>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="color: #2c3e50;">📝 یادداشت‌های این درس</h3>
+    <a href="{% url 'courses:note_create' course.pk %}" class="btn btn-primary">
+        + یادداشت جدید
+    </a>
+</div>
+
+{% if notes %}
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        {% for note in notes %}
+            <div style="background: white; border: 2px solid #e9ecef; border-right: 4px solid #667eea; border-radius: 8px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                    <div style="flex: 1;">
+                        <h4 style="color: #2c3e50; margin-bottom: 10px;">
+                            📄 {{ note.title }}
+                        </h4>
+                        <p style="color: #555; line-height: 1.8; white-space: pre-wrap;">{{ note.content|truncatechars:300 }}</p>
+                        <small style="color: #95a5a6; display: block; margin-top: 10px;">
+                            🕐 آخرین ویرایش: {{ note.updated_at|date:"Y/m/d - H:i" }}
+                        </small>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="{% url 'courses:note_edit' note.pk %}" class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">
+                            ✏️ ویرایش
+                        </a>
+                        <a href="{% url 'courses:note_delete' note.pk %}" class="btn btn-danger" style="font-size: 13px; padding: 6px 12px;">
+                            🗑️ حذف
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div style="text-align: center; padding: 50px 20px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+        <div style="font-size: 48px; margin-bottom: 15px;">📝</div>
+        <h4 style="color: #2c3e50; margin-bottom: 10px;">هنوز یادداشتی ندارید!</h4>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            اولین یادداشت این درس را ایجاد کنید.
+        </p>
+        <a href="{% url 'courses:note_create' course.pk %}" class="btn btn-primary">
+            + ایجاد یادداشت
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
+

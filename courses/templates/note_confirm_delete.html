@@ -1,0 +1,39 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}حذف یادداشت - سیستم مدیریت جزوات{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto; text-align: center;">
+    <div style="background: #f8d7da; border: 2px solid #f5c6cb; border-radius: 8px; padding: 30px;">
+        <div style="font-size: 64px; margin-bottom: 20px;">⚠️</div>
+        
+        <h2 style="color: #721c24; margin-bottom: 15px;">حذف یادداشت</h2>
+        
+        <p style="color: #721c24; margin-bottom: 20px; line-height: 1.6;">
+            آیا مطمئن هستید می‌خواهید یادداشت 
+            <strong>"{{ note.title }}"</strong> را حذف کنید؟
+        </p>
+        
+        <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: right;">
+            <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 5px;">
+                📁 درس: <strong>{{ note.course.title }}</strong>
+            </p>
+            <p style="color: #555; font-size: 14px; line-height: 1.6;">
+                {{ note.content|truncatechars:150 }}
+            </p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-danger" style="flex: 1;">
+                    🗑️ بله، حذف کن
+                </button>
+                <a href="{% url 'courses:course_detail' note.course.pk %}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                    ❌ انصراف
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
